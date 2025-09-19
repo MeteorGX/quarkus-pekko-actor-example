@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.fortress.quarkus</groupId>
+        <artifactId>pekko-actor-example</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>pekko-actor-chatroom</artifactId>
+
+
+    <properties>
+        <quarkus.pekko.group-id>io.fortress.quarkus</quarkus.pekko.group-id>
+        <quarkus.pekko.artifact-id>pekko-actor</quarkus.pekko.artifact-id>
+        <quarkus.pekko.version>1.0.0-SNAPSHOT</quarkus.pekko.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-websockets-next</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${quarkus.pekko.group-id}</groupId>
+            <artifactId>${quarkus.pekko.artifact-id}</artifactId>
+            <version>${quarkus.pekko.version}</version>
+        </dependency>
+
+
+    </dependencies>
+
+</project>
