@@ -36,6 +36,7 @@
 
     <modules>
         <module>chatroom</module>
+        <module>chatroom-cluster</module>
     </modules>
 
 
