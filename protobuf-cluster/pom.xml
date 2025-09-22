@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.fortress.quarkus</groupId>
+        <artifactId>pekko-actor-example</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>pekko-actor-protobuf-cluster</artifactId>
+
+
+    <properties>
+        <pekko.platform.artifact-id>pekko-bom</pekko.platform.artifact-id>
+        <pekko.platform.group-id>org.apache.pekko</pekko.platform.group-id>
+        <pekko.platform.version>1.2.0</pekko.platform.version>
+        <pekko.platform.scala-version>2.13</pekko.platform.scala-version>
+        <pekko.management.version>1.1.1</pekko.management.version>
+
+        <!-- environment checker -->
+        <os.plugin.group-id>kr.motd.maven</os.plugin.group-id>
+        <os.plugin.version>1.6.2</os.plugin.version>
+
+        <!-- protobuf -->
+        <protobuf.platform.artifact-id>protobuf-bom</protobuf.platform.artifact-id>
+        <protobuf.platform.group-id>com.google.protobuf</protobuf.platform.group-id>
+        <protobuf.platform.version>4.32.0</protobuf.platform.version>
+
+        <!-- protoc compiler -->
+        <protobuf.compiler.artifact-id>protoc</protobuf.compiler.artifact-id>
+        <protobuf.compiler.group-id>com.google.protobuf</protobuf.compiler.group-id>
+        <protobuf.compiler.version>${protobuf.platform.version}</protobuf.compiler.version>
+
+        <!-- protobuf version-checker -->
+        <protobuf.plugin.group-id>org.xolstice.maven.plugins</protobuf.plugin.group-id>
+        <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
+
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${pekko.platform.group-id}</groupId>
+                <artifactId>${pekko.platform.artifact-id}_${pekko.platform.scala-version}</artifactId>
+                <version>${pekko.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>${protobuf.platform.group-id}</groupId>
+                <artifactId>${protobuf.platform.artifact-id}</artifactId>
+                <version>${protobuf.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.platform.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-websockets-next</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${quarkus.pekko.group-id}</groupId>
+            <artifactId>${quarkus.pekko.artifact-id}</artifactId>
+            <version>${quarkus.pekko.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pekko.platform.group-id}</groupId>
+            <artifactId>pekko-remote_${pekko.platform.scala-version}</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${pekko.platform.group-id}</groupId>
+            <artifactId>pekko-cluster_${pekko.platform.scala-version}</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${pekko.platform.group-id}</groupId>
+            <artifactId>pekko-stream_${pekko.platform.scala-version}</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${pekko.platform.group-id}</groupId>
+            <artifactId>pekko-management_${pekko.platform.scala-version}</artifactId>
+            <version>${pekko.management.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pekko.platform.group-id}</groupId>
+            <artifactId>pekko-management-cluster-http_${pekko.platform.scala-version}</artifactId>
+            <version>${pekko.management.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.pekko</groupId>
+            <artifactId>pekko-testkit_${pekko.platform.scala-version}</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>${os.plugin.group-id}</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>${os.plugin.version}</version>
+            </extension>
+        </extensions>
+
+
+        <plugins>
+
+            <!-- Protobuf 打包插件 -->
+            <!-- https://www.xolstice.org/protobuf-maven-plugin/compile-mojo.html -->
+            <plugin>
+                <groupId>${protobuf.plugin.group-id}</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>${protobuf.plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- Protobuf编译器版本 -->
+                    <protocArtifact>
+                        ${protobuf.compiler.group-id}:${protobuf.compiler.artifact-id}:${protobuf.compiler.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+
+                    <!-- *.proto 源文件路径, 直接默认即可, 系统事件不需要其他共享 -->
+                    <!-- <protoSourceRoot>${project.parent.basedir}/proto</protoSourceRoot>-->
+
+                    <!-- 生成Java文件, 直接默认就行, IDEA会自动识别到这部分代码 -->
+                    <!--<outputDirectory>${project.basedir}/src/main/java</outputDirectory>-->
+
+                    <!-- 是否生成之前清空目录, 最好不要随便乱动 -->
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                </configuration>
+
+                <!-- 执行时机 -->
+                <executions>
+                    <!-- 执行mvn compile的时候打包生成 Java 文件 -->
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- boot 调用 generate-code 的时候打包生成 Java 文件 -->
+                    <execution>
+                        <id>generate-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -19,7 +19,14 @@
         <quarkus.platform.version>3.26.3</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
+
+
+        <quarkus.pekko.group-id>io.fortress.quarkus</quarkus.pekko.group-id>
+        <quarkus.pekko.artifact-id>pekko-actor</quarkus.pekko.artifact-id>
+        <quarkus.pekko.version>1.0.1-SNAPSHOT</quarkus.pekko.version>
     </properties>
+
+
 
     <dependencyManagement>
         <dependencies>
@@ -37,6 +44,7 @@
     <modules>
         <module>chatroom</module>
         <module>chatroom-cluster</module>
+        <module>protobuf-cluster</module>
     </modules>
 
 
