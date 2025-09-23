@@ -1,0 +1,70 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4t0n8k7kj1fx"]
+
+[ext_resource type="Script" uid="uid://cyoi3uvwu4me6" path="res://components/web_socket/web_socket_client.gd" id="1_e4uo2"]
+[ext_resource type="Script" uid="uid://dbrbqhqqushp3" path="res://components/web_socket/web_socket_manager.gd" id="2_3s155"]
+
+[node name="WebSocketClient" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e4uo2")
+
+[node name="WebSocketManager" type="Node" parent="."]
+script = ExtResource("2_3s155")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Menu" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Hostname" type="LineEdit" parent="Panel/VBoxContainer/Menu"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ws://127.0.0.1:8080/chatroom/test"
+placeholder_text = "ws://my.server/path/"
+
+[node name="Connect" type="Button" parent="Panel/VBoxContainer/Menu"]
+layout_mode = 2
+toggle_mode = true
+text = "Connect"
+
+[node name="Command" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Content" type="LineEdit" parent="Panel/VBoxContainer/Command"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Send" type="Button" parent="Panel/VBoxContainer/Command"]
+layout_mode = 2
+text = "Send"
+
+[node name="Body" type="RichTextLabel" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="closed" from="WebSocketManager" to="." method="_on_web_socket_manager_closed"]
+[connection signal="connected" from="WebSocketManager" to="." method="_on_web_socket_manager_connected"]
+[connection signal="received" from="WebSocketManager" to="." method="_on_web_socket_manager_received"]
+[connection signal="toggled" from="Panel/VBoxContainer/Menu/Connect" to="." method="_on_connect_toggled"]
+[connection signal="pressed" from="Panel/VBoxContainer/Command/Send" to="." method="_on_send_pressed"]
