@@ -1,0 +1,52 @@
+<Project Sdk="Godot.NET.Sdk/4.5.0">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <ProtobufInputDir>Protos</ProtobufInputDir>
+        <ProtobufOutputDir>Generated/Protobuf</ProtobufOutputDir>
+
+        <!-- Manual:https://chromium.googlesource.com/external/github.com/grpc/grpc/+/HEAD/src/csharp/BUILD-INTEGRATION.md -->
+        <ProtobufExecBIN>$(PROTOBUF_PROTOC)</ProtobufExecBIN>
+        <ProtobufExecOS>$(PROTOBUF_TOOLS_OS)</ProtobufExecOS>
+        <ProtobufExecCPU>$(PROTOBUF_TOOLS_CPU)</ProtobufExecCPU>
+        <ProtobufVerbose>true</ProtobufVerbose>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.32.1"/>
+        <PackageReference Include="Google.Protobuf.Tools" Version="3.32.1" PrivateAssets="All"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Protobuf Include="res://$(ProtobufInputDir)/**/*.proto"
+                  ProtoRoot="res://$(ProtobufInputDir)"
+                  OutputDir="res://$(ProtobufOutputDir)"
+                  CompileOutputs="true"
+                  GrpcServices="None">
+        </Protobuf>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Protos/**/*.proto"/>
+    </ItemGroup>
+
+
+    <Target Name="PrintVariables" BeforeTargets="CoreCompile">
+        <Message Importance="high" Text="Protobuf Execute Binary -> $(ProtobufExecBIN)"/>
+        <Message Importance="high" Text="Protobuf Execute OS -> $(ProtobufExecOS)"/>
+        <Message Importance="high" Text="Protobuf Execute CPU -> $(ProtobufExecCPU)"/>
+        <Message Importance="high" Text="Protobuf Input Files - > res://$(ProtobufInputDir)/**/*.proto"/>
+        <Message Importance="high" Text="Protobuf Output Directory -> res://$(ProtobufOutputDir)"/>
+    </Target>
+
+
+    <Target Name="ProtobufGenerate" BeforeTargets="CoreCompile">
+        <MakeDir Directories="$(ProjectDir)$(ProtobufOutputDir)" Condition="!Exists('$(ProjectDir)$(ProtobufOutputDir)')"/>
+        
+        <ItemGroup>
+            <ProtobufFiles Include="$(ProtobufInputDir)/**/*.proto"/>
+        </ItemGroup>
+        <Exec Command="$(ProtobufExecBIN) -I=&quot;$(ProjectDir)$(ProtobufInputDir)&quot; --csharp_out=&quot;$(ProjectDir)$(ProtobufOutputDir)&quot; @(ProtobufFiles->'&quot;%(FullPath)&quot;', ' ')"/>
+    </Target>
+
+</Project>

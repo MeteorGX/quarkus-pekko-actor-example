@@ -4,7 +4,6 @@ package io.fortress.quarkus.protobuf;
 import com.google.protobuf.ByteString;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.websockets.next.CloseReason;
-import org.apache.commons.codec.cli.Digest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -125,6 +124,21 @@ class ProtobufClusterApplicationTest {
         // CGUSKAAAAAAAACcRNmYwNDIxNzY2YTkwM2U4NDAwMzI2MTk0YTlhNDJmODA=
         String postmanData = Base64.getEncoder().encodeToString(data);
         log.debugf("PostmanData = %s", postmanData);
+    }
+
+    @Test
+    public void godotMessageTest(){
+        Command.BytesMessage message = Command
+                .BytesMessage
+                .newBuilder()
+                .setId(100)
+                .setMessage(ByteString.copyFrom("test".getBytes(StandardCharsets.UTF_8)))
+                .build();
+        Assertions.assertNotNull(message);
+        byte[] data = message.toByteArray();
+        Assert.assertTrue(data.length > 0);
+        // [8, 100, 18, 4, 116, 101, 115, 116]
+        log.debugf("Godot Message = %s", Arrays.toString(data));
     }
 
 }

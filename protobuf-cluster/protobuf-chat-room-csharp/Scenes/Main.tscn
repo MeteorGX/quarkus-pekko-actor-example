@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=3 uid="uid://s5owjvqg1c4m"]
+
+[ext_resource type="Script" uid="uid://depq14ypexwhh" path="res://Scenes/Main.cs" id="1_rvslj"]
+[ext_resource type="Script" uid="uid://d4m6vbt30wwk0" path="res://Scenes/WebSocketManager.cs" id="2_rvslj"]
+
+[node name="WebSocket" type="Control" node_paths=PackedStringArray("ConnectButton", "SendButton", "Hostname", "Message", "Body", "Manager")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rvslj")
+ConnectButton = NodePath("Panel/VBoxContainer/Connect/Connect")
+SendButton = NodePath("Panel/VBoxContainer/Send/Send")
+Hostname = NodePath("Panel/VBoxContainer/Connect/Hostname")
+Message = NodePath("Panel/VBoxContainer/Send/Message")
+Body = NodePath("Panel/VBoxContainer/Body")
+Manager = NodePath("WebSocketManager")
+
+[node name="WebSocketManager" type="Node" parent="."]
+script = ExtResource("2_rvslj")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 5.0
+offset_right = -12.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Connect" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Hostname" type="LineEdit" parent="Panel/VBoxContainer/Connect"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ws://127.0.0.1:8080/protobuf"
+placeholder_text = "ws://my.server/path/"
+
+[node name="Connect" type="Button" parent="Panel/VBoxContainer/Connect"]
+layout_mode = 2
+toggle_mode = true
+text = "Connect"
+
+[node name="Send" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Message" type="LineEdit" parent="Panel/VBoxContainer/Send"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Send" type="Button" parent="Panel/VBoxContainer/Send"]
+layout_mode = 2
+text = "Send"
+
+[node name="TopSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Body" type="RichTextLabel" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

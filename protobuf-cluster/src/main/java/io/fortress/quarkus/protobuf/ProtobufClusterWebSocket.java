@@ -9,6 +9,7 @@ import org.apache.pekko.actor.ActorRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -101,8 +102,7 @@ public class ProtobufClusterWebSocket {
         logger.debug("TextMessage from websocket: {}", session.id() + ": " + message);
         ActorRef actor = sessions.get(session.id());
         if (!Objects.isNull(actor)) {
-            Command.TextMessage textMessage = Command.TextMessage.newBuilder().setMessage(message).build();
-            actor.tell(textMessage, ActorRef.noSender());
+            actor.tell(message, ActorRef.noSender());
         }
     }
 
@@ -115,8 +115,7 @@ public class ProtobufClusterWebSocket {
         logger.debug("BinaryMessage from websocket: {}", session.id() + ": " + Arrays.toString(message));
         ActorRef actor = sessions.get(session.id());
         if (!Objects.isNull(actor)) {
-            Command.BytesMessage bytesMessage = Command.BytesMessage.newBuilder().setMessage(ByteString.copyFrom(message)).build();
-            actor.tell(bytesMessage, ActorRef.noSender());
+            actor.tell(ByteBuffer.wrap(message), ActorRef.noSender());
         }
     }
 

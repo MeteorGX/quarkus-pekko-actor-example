@@ -5,6 +5,8 @@ import io.quarkus.websockets.next.WebSocketConnection;
 import org.apache.pekko.actor.AbstractActor;
 import org.apache.pekko.event.LoggingAdapter;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 
@@ -29,14 +31,27 @@ public class ProtobufClusterSession extends AbstractActor {
                 .match(Command.Exception.class, e -> {
                     log.error(e.getMessage());
                 })
-                .match(Command.BytesMessage.class, bytes -> {
-                    if (log.isDebugEnabled())
-                        log.debug("Bytes Message Request: {}", Arrays.toString(bytes.toByteArray()));
+                .match(String.class, message -> {
+                    var msg = Command.TextMessage.parseFrom(message.getBytes(StandardCharsets.UTF_8));
+                    getSelf().tell(msg, getSender());
+                })
+                .match(ByteBuffer.class, byteBuffer -> {
+                    var msg = Command.BytesMessage.parseFrom(byteBuffer.array());
+                    getSelf().tell(msg, getSender());
+                })
 
+                .match(Command.BytesMessage.class, bytes -> {
+                    if (log.isDebugEnabled()) {
+                        if (bytes.getId() == 100) {
+                            log.debug("Received String Message: {}", bytes.getMessage().toStringUtf8());
+                        } else {
+                            log.debug("Bytes Message Request: {} - {}", bytes.getId(), Arrays.toString(bytes.getMessage().toByteArray()));
+                        }
+                    }
                 })
                 .match(Command.TextMessage.class, text -> {
                     if (log.isDebugEnabled())
-                        log.debug("Text Message Request: {}", text);
+                        log.debug("Text Message Request: {} - {}", text.getId(), text.getMessage());
 
                 })
                 .build();
